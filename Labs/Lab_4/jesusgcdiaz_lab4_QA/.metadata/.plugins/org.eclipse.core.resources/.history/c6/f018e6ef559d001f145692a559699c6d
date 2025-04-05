@@ -1,0 +1,144 @@
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
+import java.util.List;
+
+public class PhptravelsTest {
+
+    private WebDriver driver;
+    private WebDriverWait wait;
+
+    @Before
+    public void setUp() {
+        // Configurar la propiedad del WebDriver para Microsoft Edge
+        System.setProperty("webdriver.edge.driver", "./src/test/resources/edgedriver/msedgedriver.exe");
+        driver = new EdgeDriver();
+        driver.manage().window().maximize();
+        // Inicializar WebDriverWait con un tiempo de espera de 10 segundos
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        // Navegar al sitio de prueba
+        driver.get("https://www.phptravels.net/");
+    }
+
+    @After
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+
+    @Test
+    public void testExisteAccount() {
+        // Esperar que el elemento de "Account" esté presente y visible en la página
+        WebElement accountDropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/header/div/div[2]/div[2]/ul/li[3]/a")));
+
+        // Verificar que el elemento "Account" está presente en la página
+        Assert.assertTrue("El elemento 'Account' no está visible en la barra de navegación.", accountDropdown.isDisplayed());
+
+        // Hacer clic en el dropdown "Account" para verificar que se despliega el menú
+        accountDropdown.click();
+
+        // Verificar que el menú desplegable contiene las opciones "Login" y "Signup"
+        WebElement loginOption = wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Login")));
+        WebElement signupOption = wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Signup")));
+
+        Assert.assertTrue("La opción 'Login' no está visible en el menú desplegable.", loginOption.isDisplayed());
+        Assert.assertTrue("La opción 'Signup' no está visible en el menú desplegable.", signupOption.isDisplayed());
+    }
+    
+    
+    @Test
+    public void testNavegarAlLogin() throws InterruptedException {
+    	 // Abrir el menú de "Account" y hacer clic en "Login"
+    	WebElement accountDropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/header/div/div[2]/div[2]/ul/li[3]/a")));
+        accountDropdown.click();
+        WebElement loginLink = wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Login")));
+        loginLink.click();
+
+        // Esperar a que cargue la página de login
+        WebElement emailField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("email")));
+        WebElement passwordField = driver.findElement(By.id("password"));
+        
+        // Ingresar las credenciales
+        emailField.sendKeys("user@phptravels.com");  
+        passwordField.sendKeys("demouser");    
+        
+        // Hacer clic en el botón de inicio de sesión
+        WebElement botonLogin = driver.findElement(By.id("submitBTN"));
+        botonLogin.click();
+
+        // Verificar que el inicio de sesión fue exitoso
+        WebElement dashboardElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/main/div/div/div/div[1]/div/div/div/div[1]/img")));
+        Assert.assertTrue("Inicio de sesión fallido, no se encontró el elemento esperado en el dashboard.", dashboardElement.isDisplayed());
+    }
+
+    @Test
+    public void testNavegarAlSignup() throws InterruptedException {
+    	// Abrir el menú de "Account" y hacer clic en "Login"
+    	WebElement accountDropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/header/div/div[2]/div[2]/ul/li[3]/a")));
+        accountDropdown.click();
+        WebElement loginLink = wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Signup")));
+        loginLink.click();
+
+     // Esperar que el boton de "submitBTN" esté presente y visible en la página
+        WebElement botonSubmitBTN = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("submitBTN")));
+
+        // Verificar que el elemento "submitBTN" está presente en la página
+        Assert.assertTrue("El elemento 'Account' no está visible en la barra de navegación.", botonSubmitBTN.isDisplayed());
+    }
+    
+    
+    @Test
+    public void testCambiarIdiomaAGermany() throws InterruptedException {
+    	 // Abrir el menú de los idiomas y hacer clic 
+    	WebElement accountDropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/header/div/div[2]/div[2]/ul/li[1]/a")));
+        accountDropdown.click();
+        
+        WebElement idiomaGermany = wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Germany")));
+        idiomaGermany.click();
+
+     // Esperar que el elemento de "Account" esté presente y visible en la página
+        WebElement KontoDropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/header/div/div[2]/div[2]/ul/li[3]/a")));
+
+        // Verificar que el elemento "Konto" está presente en la página
+        Assert.assertTrue("El elemento 'Konto' no está visible en la barra de navegación.", KontoDropdown.isDisplayed());
+        
+    }
+    
+    @Test
+    public void testCambiarMonedaAUnitedKingdom() throws InterruptedException {
+    	 // Abrir el menú de los idiomas y hacer clic 
+    	WebElement accountDropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/header/div/div[2]/div[2]/ul/li[2]/a")));
+        accountDropdown.click();
+        
+        WebElement idiomaGermany = wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("United Kingdom")));
+        idiomaGermany.click();
+
+     // Esperar que el elemento de "Account" esté presente y visible en la página
+        WebElement KontoDropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/header/div/div[2]/div[2]/ul/li[3]/a")));
+
+        // Verificar que el elemento "Konto" está presente en la página
+        Assert.assertTrue("El elemento 'Konto' no está visible en la barra de navegación.", KontoDropdown.isDisplayed());
+        
+    }
+    
+    @Test
+    public void testBuscarHoteles() {
+        // Navegar directamente al enlace de hoteles
+        WebElement hotelsLink = wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Hotels")));
+        hotelsLink.click();
+
+        // Espera explícita para verificar que el contenedor principal esté visible
+        WebElement divHoteles = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/main")));
+        Assert.assertTrue("Featured Hotels está visible", divHoteles.isDisplayed());
+    }
+
+}
